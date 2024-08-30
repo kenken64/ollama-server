@@ -62,8 +62,9 @@ app.get('/api/chat', async (req, res) => {
   console.log('message: ' + req.query.message)
   let msg = req.query.message
   const response = await ollama.chat({
-  	model: 'mistral',
+  	model: 'llama2-uncensored:latest',
   	messages: [{ role: 'user', content: msg }],
+	return_type: 'markdown'
   })
   console.log(response.message.content)
   res.status(200).json(response.message.content)
