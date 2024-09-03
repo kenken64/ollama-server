@@ -87,8 +87,6 @@ const uploadPDF = multer({ storage: storagePDF });
 // Set up a route for file uploads
 app.post('/api/upload', upload.single('file'), async (req, res) => {
   // Handle the uploaded file
-  console.log("upload !!!");
-  console.log(currentImageFile);
   let imageInBase64 = toBase64(uploadDirectory + currentImageFile);
   const response = await ollama.chat({
   	model: 'llava',
@@ -103,7 +101,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 // Set up a route for pdf file uploads
 app.post('/api/pdf-upload', uploadPDF.single('pdf-file'), async (req, res) => {
   // Handle the uploaded file
-  console.log("upload !!!");
+  console.log("uploading pdf ...");
   console.log(currentPDFFile);
   console.log(uploadPDFDirectory + currentPDFFile);
   const loader = new PDFLoader(uploadPDFDirectory + currentPDFFile);
@@ -134,7 +132,6 @@ app.post('/api/pdf-upload', uploadPDF.single('pdf-file'), async (req, res) => {
       `Creating ${chunks.length} vectors array with id, values, and metadata...`
     );
     
-    //const batchSize = 2;
     let batches = [];
     for (let idx = 0; idx < chunks.length; idx++) {
       const chunk = chunks[idx];
@@ -156,11 +153,9 @@ app.post('/api/pdf-upload', uploadPDF.single('pdf-file'), async (req, res) => {
       console.log(chunk.length)
       
       console.log("...upsert !");
-      //if(batches != undefined)
       await index.upsert(batches);
       // Empty the batch
       batches = [];
-      
     }
   }
  
