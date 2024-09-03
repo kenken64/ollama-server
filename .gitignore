@@ -4,3 +4,4 @@ uploads
 .env.bak
 pdf
 scripts
+package-lock.json
