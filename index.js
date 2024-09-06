@@ -11,6 +11,7 @@ import { OllamaEmbeddings } from "@langchain/ollama";
 import { loadQAStuffChain } from "langchain/chains";
 import { Document } from "langchain/document";
 import { Ollama } from "@langchain/ollama";
+import fetch from 'node-fetch';
 
 const uploadDirectory = 'uploads/';
 const uploadPDFDirectory = 'pdf/';
@@ -222,6 +223,27 @@ app.get('/api/chat-pdf', async (req, res) => {
   res.status(200).json(`${responseResult}`);
 })
 
+
+app.get('/api/generate-song', async(req,res) =>{
+  let sunoApiUrl = process.env.SUNO_API_URL;
+  let question = req.query.message;
+  console.log(question);
+  console.log(sunoApiUrl);
+  const body = {
+    prompt: question,
+    make_instrumental: false,
+    wait_audio: true
+  };
+  const response = await fetch(`${sunoApiUrl}/generate`, {
+    method: 'post',
+    body: JSON.stringify(body),
+    headers: {'Content-Type': 'application/json'}
+  });
+  const data = await response.json();
+
+  console.log(data);
+  res.status(200).json(data);
+})
 
 app.listen(port, () => {
   console.log(`Ollama API Server listening on port ${port}`)
